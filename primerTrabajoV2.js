@@ -33,7 +33,7 @@ function merkleTree(leaves) {
         }
 
         // Muestra el nivel actual del árbol
-        console.log('Nivel actual del árbol:', nextLevel);
+        console.log('Nivel actual del árbol:', nextLevel, '\n');
 
 
         // Actualiza el nivel actual al siguiente nivel
