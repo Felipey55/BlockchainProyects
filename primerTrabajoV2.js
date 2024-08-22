@@ -49,6 +49,7 @@ const data = ['4 Bitcoins', '1 Bitcoin', '9 Bitcoins', '0 Bitcoins']; // Array d
 const leaves = data.map(item => generateHash(item)); // Genera los hashes para cada dato
 
 // Mostrar los hashes de las palabras individuales
+console.log('\n');
 data.forEach((item, index) => {
     console.log(`Hash de "${item}":`, leaves[index]);
 });
