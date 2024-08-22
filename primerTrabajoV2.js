@@ -63,7 +63,7 @@ data.forEach((item, index) => {
 const merkleRoot = merkleTree(leaves);
 console.log('Hash de la raíz del árbol:', merkleRoot);
 
-// Calcular el hash de todo el bloque
+// Calcular el hash de todo el bloqueadsdasads
 let prevHash = '000000000000000000000000000000000'; // Hash previo (para simular bloques encadenados)
 let nonce = 123456; // Nonce utilizado en la minería (valor arbitrario)
 const blockHash = generateHash(merkleRoot + prevHash + nonce);
