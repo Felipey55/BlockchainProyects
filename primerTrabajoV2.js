@@ -71,4 +71,4 @@ console.log('El hash de todo el bloque es:', blockHash);
 
 // Volver el hash de todo el bloque el nuevo prevHash o el hash previo
 prevHash = blockHash
-console.log('asd: ',prevHash);
+console.log('El nuevo hash previo es: ',prevHash);

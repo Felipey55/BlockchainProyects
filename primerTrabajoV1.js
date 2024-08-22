@@ -64,4 +64,8 @@ shaObjBlockHash.update(blockHash);
 const block = shaObjBlockHash.getHash("HEX");
 console.log('El hash de todo el bloque es: ',block);
 
+// Volver el hash de todo el bloque el nuevo prevHash o el hash previo
+prevHash = block
+console.log('El nuevo hash previo es: ',prevHash);
+
 
