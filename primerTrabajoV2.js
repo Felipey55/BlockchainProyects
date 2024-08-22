@@ -69,5 +69,6 @@ let nonce = 123456; // Nonce utilizado en la minería (valor arbitrario)
 const blockHash = generateHash(merkleRoot + prevHash + nonce);
 console.log('El hash de todo el bloque es:', blockHash);
 
+// Volver el hash de todo el bloque el nuevo prevHash o el hash previo
 prevHash = blockHash
 console.log('asd: ',prevHash);
