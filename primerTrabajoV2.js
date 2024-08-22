@@ -45,12 +45,12 @@ function merkleTree(leaves) {
 }
 
 // Datos de las hojas
-const data = ['hola', 'chao', 'carlos', 'felipe']; // Array de datos de entrada
+const data = ['4 Bitcoins', '1 Bitcoin', '9 Bitcoins', '0 Bitcoins']; // Array de datos de entrada
 const leaves = data.map(item => generateHash(item)); // Genera los hashes para cada dato
 
 // Mostrar los hashes de las palabras individuales
 data.forEach((item, index) => {
-    console.log(`Hash de la palabra "${item}":`, leaves[index]);
+    console.log(`Hash de "${item}":`, leaves[index]);
 });
 
 // Construir el árbol de Merkle y obtener la raíz
