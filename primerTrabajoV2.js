@@ -52,9 +52,11 @@ const leaves = data.map(item => generateHash(item)); // Genera los hashes para c
 data.forEach((item, index) => {
     console.log(`Hash de "${item}":`, leaves[index]);
 });
+console.log('\n');
 
 // Construir el árbol de Merkle y obtener la raíz
 const merkleRoot = merkleTree(leaves);
+console.log('\n');
 console.log('Hash de la raíz del árbol:', merkleRoot);
 
 // Calcular el hash de todo el bloque
@@ -65,4 +67,4 @@ console.log('El hash de todo el bloque es:', blockHash);
 
 // Volver el hash de todo el bloque el nuevo prevHash o el hash previo
 prevHash = blockHash
-console.log('El nuevo hash previo es: ',prevHash);
+console.log('El nuevo hash previo es: ', prevHash, '\n');
