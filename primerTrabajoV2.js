@@ -3,9 +3,6 @@ const SHA256 = require("jssha");
 // Función para generar el hash SHA-256
 /**
  * Genera un hash SHA-256 a partir de un dato proporcionado.
- * 
- * @param {string} data - El dato que se va a hashear.
- * @return {string} - El hash SHA-256 en formato hexadecimal.
  */
 function generateHash(data) {
     const shaObj = new SHA256("SHA-256", "TEXT"); // Crea un nuevo objeto SHA-256
@@ -16,9 +13,6 @@ function generateHash(data) {
 // Función para construir un árbol de Merkle
 /**
  * Construye un árbol de Merkle a partir de una lista de hashes de hojas.
- * 
- * @param {string[]} leaves - Una lista de hashes que representan las hojas del árbol.
- * @return {string} - El hash de la raíz del árbol de Merkle.
  */
 function merkleTree(leaves) {
     let currentLevel = leaves; // Inicializa el nivel actual con las hojas
