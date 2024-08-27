@@ -1,52 +1,38 @@
 const SHA256 = require("jssha");
 
 // Función para generar el hash SHA-256
-/**
- * Genera un hash SHA-256 a partir de un dato proporcionado.
- */
 function generateHash(data) {
-    const shaObj = new SHA256("SHA-256", "TEXT"); // Crea un nuevo objeto SHA-256
-    shaObj.update(data); // Actualiza el objeto SHA-256 con el dato
-    return shaObj.getHash("HEX"); // Retorna el hash en formato hexadecimal
+    const shaObj = new SHA256("SHA-256", "TEXT");
+    shaObj.update(data);
+    return shaObj.getHash("HEX");
 }
 
 // Función para construir un árbol de Merkle
-/**
- * Construye un árbol de Merkle a partir de una lista de hashes de hojas.
- */
 function merkleTree(leaves) {
-    let currentLevel = leaves; // Inicializa el nivel actual con las hojas
+    let currentLevel = leaves;
 
-    // Mientras haya más de un hash en el nivel actual
     while (currentLevel.length > 1) {
-        let nextLevel = []; // Lista para almacenar los hashes del siguiente nivel
+        let nextLevel = [];
 
         for (let i = 0; i < currentLevel.length; i += 2) {
             if (i + 1 < currentLevel.length) {
-                // Combina dos hashes adyacentes y crea el hash padre
                 const combinedHash = generateHash(currentLevel[i] + currentLevel[i + 1]);
-                nextLevel.push(combinedHash); // Añade el hash padre al siguiente nivel
+                nextLevel.push(combinedHash);
             } else {
-                // Si hay un hash sin pareja, se sube solo al siguiente nivel
                 nextLevel.push(currentLevel[i]);
             }
         }
 
-        // Muestra el nivel actual del árbol
         console.log('Nivel actual del árbol:', nextLevel, '\n');
-
-
-        // Actualiza el nivel actual al siguiente nivel
         currentLevel = nextLevel;
     }
 
-    // El último hash en el nivel es la raíz de Merkle
     return currentLevel[0];
 }
 
 // Datos de las hojas
-const data = ['4 Bitcoins', '1 Bitcoin', '9 Bitcoins', '0 Bitcoins']; // Array de datos de entrada
-const leaves = data.map(item => generateHash(item)); // Genera los hashes para cada dato
+const data = ['4 Bitcoins', '1 Bitcoin', '9 Bitcoins', '0 Bitcoins', '99 Bitcoins', '12 Bitcoins'];
+const leaves = data.map(item => generateHash(item));
 
 // Mostrar los hashes de las palabras individuales
 console.log('\n');
@@ -60,12 +46,16 @@ const merkleRoot = merkleTree(leaves);
 console.log('\n');
 console.log('Hash de la raíz del árbol:', merkleRoot);
 
-// Calcular el hash de todo el bloque
-let prevHash = '000000000000000000000000000000000'; // Hash previo (para simular bloques encadenados)
-let nonce = 123456; // Nonce utilizado en la minería (valor arbitrario)
-const blockHash = generateHash(merkleRoot + prevHash + nonce);
-console.log('El hash de todo el bloque es:', blockHash);
+// Implementar el Proof of Work
+let prevHash = '000000000000000000000000000000000'; // Hash previo
+let nonce = 0;
+const difficulty = 6;
 
-// Volver el hash de todo el bloque el nuevo prevHash o el hash previo
-prevHash = blockHash
+while (!generateHash(merkleRoot + prevHash + nonce).startsWith('0'.repeat(difficulty))) nonce++;
+
+const blockHash = generateHash(merkleRoot + prevHash + nonce);
+console.log(`Nonce encontrado: ${nonce}, Hash: ${blockHash}`);
+
+// Actualizar el hash previo con el hash del bloque
+prevHash = blockHash;
 console.log('El nuevo hash previo es: ', prevHash, '\n');
