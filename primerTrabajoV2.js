@@ -31,7 +31,7 @@ function merkleTree(leaves) {
 }
 
 // Datos de las hojas
-const data = ['4 Bitcoins', '1 Bitcoin', '9 Bitcoins', '0 Bitcoins', '99 Bitcoins', '12 Bitcoins'];
+const data = [4 , 1, 9, 0, 99, 12];
 const leaves = data.map(item => generateHash(item));
 
 // Mostrar los hashes de las palabras individuales
