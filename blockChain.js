@@ -3,22 +3,17 @@ const fs = require('fs');
 const SHA256 = require('jssha');
 
 // Función para generar el hash SHA-256
-/**
- * Genera un hash SHA-256 para los datos proporcionados.
- * @param {string} data - Datos de entrada en formato de texto.
- * @returns {string} - El hash SHA-256 en formato hexadecimal.
- */
 function generateHash(data) {
     const shaObj = new SHA256("SHA-256", "TEXT");
     shaObj.update(data);
     return shaObj.getHash("HEX");
 }
 
-// Datos de las hojas (puedes agregar o quitar transacciones aquí)
-const data = [4, 1, 9, 0, 99, 12];  // Se añadió una nueva transacción
+// Datos de las transacciones (puedes agregar o quitar transacciones aquí)
+const data = [4, 1, 9, 0, 99];  // Se añadió una nueva transacción
 
 // Verificación de las transacciones con el archivo JSON
-fs.readFile('E:/Felipe XD/Universidad/Cursos/BlockChain/transactions.json', 'utf8', (err, fileData) => {
+fs.readFile('../BlockChain/transactions.json', 'utf8', (err, fileData) => {
     if (err) {
         console.error('Error al leer el archivo:', err);
         return;
@@ -27,24 +22,23 @@ fs.readFile('E:/Felipe XD/Universidad/Cursos/BlockChain/transactions.json', 'utf
     // Parsear el contenido del archivo JSON
     const jsonData = JSON.parse(fileData);
 
-    // Verificar si el número de transacciones coincide
-    if (jsonData.transactions.length !== data.length) {
-        console.error('Las transacciones no coinciden con las originales. Cantidad de transacciones diferente.');
-        return;
-    }
-
-    // Generar los hashes de las transacciones originales
+    // Generar los hashes de las transacciones de 'data'
     const originalHashes = data.map(item => generateHash(item.toString()));
 
-    // Verificar si los hashes del archivo JSON coinciden con los generados
-    const verification = jsonData.transactions.every((transaction, index) => {
-        return transaction.hash === originalHashes[index];
-    });
+    // Verificar si alguna transacción en 'data' está presente en el archivo JSON
+    const missingTransactions = originalHashes.filter(hash => 
+        !jsonData.transactions.some(transaction => transaction.hash === hash)
+    );
 
-    if (!verification) {
-        console.error('Las transacciones no coinciden con las originales.');
+    if (missingTransactions.length > 0) {
+        console.error('Algunas transacciones no son validas.');
+        missingTransactions.forEach((hash, index) => {
+            console.log(`Transacción con hash ${hash} no encontrada.`);
+        });
         return;
     }
+
+    console.log('Todas las transacciones de "data" están presentes en el archivo JSON.');
 
     // Si la verificación pasa, solo entonces continuar con la construcción del árbol de Merkle y demás.
     // Generar los hashes de las hojas
@@ -82,11 +76,6 @@ fs.readFile('E:/Felipe XD/Universidad/Cursos/BlockChain/transactions.json', 'utf
 });
 
 // Función para construir un árbol de Merkle (se coloca aquí ya que solo se ejecutará si la verificación pasa)
-/**
- * Construye un árbol de Merkle a partir de una lista de hojas y devuelve la raíz.
- * @param {Array<string>} leaves - Lista de hashes de las hojas.
- * @returns {string} - El hash de la raíz del árbol de Merkle.
- */
 function merkleTree(leaves) {
     let currentLevel = leaves;
 

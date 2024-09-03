@@ -20,7 +20,7 @@ function generateHash(data) {
  * @param {number} transactionData - Los datos de la nueva transacción.
  */
 function addTransaction(transactionData) {
-    const filePath = 'E:/Felipe XD/Universidad/Cursos/BlockChain/transactions.json';
+    const filePath = '../BlockChain/transactions.json';
 
     // Leer el archivo JSON existente
     fs.readFile(filePath, 'utf8', (err, fileData) => {
@@ -50,6 +50,6 @@ function addTransaction(transactionData) {
 }
 
 // Ejemplo de uso: Agregar una nueva transacción con el valor 50
-addTransaction(444);
+addTransaction(36);
 
 module.exports = { addTransaction };
