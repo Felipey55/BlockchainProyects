@@ -26,7 +26,7 @@ fs.readFile('../BlockChain/transactions.json', 'utf8', (err, fileData) => {
     const originalHashes = data.map(item => generateHash(item.toString()));
 
     // Verificar si alguna transacción en 'data' está presente en el archivo JSON
-    const missingTransactions = originalHashes.filter(hash => 
+    const missingTransactions = originalHashes.filter(hash =>
         !jsonData.transactions.some(transaction => transaction.hash === hash)
     );
 
