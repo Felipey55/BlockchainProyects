@@ -59,7 +59,7 @@ fs.readFile('../BlockChain/transactions.json', 'utf8', (err, fileData) => {
     // Implementación del Proof of Work
     let prevHash = '000000000000000000000000000000000'; // Hash previo inicial
     let nonce = 0;
-    const difficulty = 3; // Dificultad definida por el número de ceros iniciales
+    const difficulty = 5; // Dificultad definida por el número de ceros iniciales
 
     // Bucle para encontrar el nonce que cumpla con la dificultad requerida
     while (!generateHash(merkleRoot + prevHash + nonce).startsWith('0'.repeat(difficulty))) {

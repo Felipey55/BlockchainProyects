@@ -50,6 +50,6 @@ function addTransaction(transactionData) {
 }
 
 // Ejemplo de uso: Agregar una nueva transacción con el valor 50
-addTransaction(36);
+addTransaction(70);
 
 module.exports = { addTransaction };
