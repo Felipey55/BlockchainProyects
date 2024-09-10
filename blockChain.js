@@ -15,7 +15,7 @@ function generateHash(data) {
 }
 
 // Datos de las hojas (puedes agregar o quitar transacciones aquí)
-const data = [4, 1, 9, 0, 99, 12, 50];  // Se añadió una nueva transacción
+const data = [4, 1, 9, 0, 99, 12, 50,9999];  // Se añadió una nueva transacción
 
 // Verificación de las transacciones con el archivo JSON
 fs.readFile('../BlockChain/transactions.json', 'utf8', (err, fileData) => {
@@ -24,12 +24,11 @@ fs.readFile('../BlockChain/transactions.json', 'utf8', (err, fileData) => {
         return;
     }
 
-    // Parsear el contenido del archivo JSON
     const jsonData = JSON.parse(fileData);
 
     // Verificar si el número de transacciones coincide
     if (jsonData.transactions.length !== data.length) {
-        console.error('Las transacciones no coinciden con las originales. Cantidad de transacciones diferente.');
+        console.error('Las transacciones no coinciden con las originales. Cantidad de transacciones y/o diferente.');
         return;
     }
 
@@ -46,8 +45,7 @@ fs.readFile('../BlockChain/transactions.json', 'utf8', (err, fileData) => {
         return;
     }
 
-    // Si la verificación pasa, solo entonces continuar con la construcción del árbol de Merkle y demás.
-    // Generar los hashes de las hojas
+    // Si la verificación pasa, continuar con la construcción del árbol de Merkle y demás.
     const leaves = data.map(item => generateHash(item.toString()));
 
     // Mostrar los hashes de las palabras individuales
@@ -59,42 +57,27 @@ fs.readFile('../BlockChain/transactions.json', 'utf8', (err, fileData) => {
 
     // Construir el árbol de Merkle y obtener la raíz
     const merkleRoot = merkleTree(leaves);
-    console.log('\n');
-    console.log('Hash de la raíz del árbol:', merkleRoot);
+    console.log('\nHash de la raíz del árbol:', merkleRoot);
 
     // Implementación del Proof of Work
-    let prevHash = '000000000000000000000000000000000'; // Hash previo inicial
-    let nonce = 0;
-    const difficulty = 3; // Dificultad definida por el número de ceros iniciales
+    const difficulty = 5; // Dificultad definida por el número de ceros iniciales
+    const prevHash = '000000000000000000000000000000000'; // Hash previo inicial
 
-    // Bucle para encontrar el nonce que cumpla con la dificultad requerida
-    while (!generateHash(merkleRoot + prevHash + nonce).startsWith('0'.repeat(difficulty))) {
-        nonce++;
-    }
-
-    // Generar el hash del bloque utilizando el nonce encontrado
-    const blockHash = generateHash(merkleRoot + prevHash + nonce);
-    console.log(`Nonce encontrado: ${nonce}, Hash: ${blockHash}`);
+    // Encontrar el nonce y el hash válido
+    const { nonce, hash: blockHash } = proofOfWork(merkleRoot, prevHash, difficulty);
+    console.log(`Nonce encontrado: ${nonce}, Hash del bloque: ${blockHash}`);
 
     // Actualizar el hash previo con el hash del bloque actual
-    prevHash = blockHash;
-    console.log('El nuevo hash previo es: ', prevHash, '\n');
+    console.log('El nuevo hash previo es: ', blockHash, '\n');
 });
 
-// Función para construir un árbol de Merkle (se coloca aquí ya que solo se ejecutará si la verificación pasa)
-/**
- * Construye un árbol de Merkle a partir de una lista de hojas y devuelve la raíz.
- * @param {Array<string>} leaves - Lista de hashes de las hojas.
- * @returns {string} - El hash de la raíz del árbol de Merkle.
- */
+// Función para construir un árbol de Merkle
 function merkleTree(leaves) {
     let currentLevel = leaves;
 
-    // Iterar hasta que solo quede un hash, que será la raíz del árbol
     while (currentLevel.length > 1) {
         let nextLevel = [];
 
-        // Combinar los hashes en pares y generar un nuevo hash
         for (let i = 0; i < currentLevel.length; i += 2) {
             if (i + 1 < currentLevel.length) {
                 const combinedHash = generateHash(currentLevel[i] + currentLevel[i + 1]);
@@ -110,6 +93,19 @@ function merkleTree(leaves) {
         currentLevel = nextLevel;
     }
 
-    // Devolver el hash de la raíz del árbol
     return currentLevel[0];
+}
+
+// Función de Proof of Work (PoW)
+function proofOfWork(rootHash, previousHash, difficulty) {
+    let nonce = 0;
+    let hash = generateHash(rootHash + previousHash + nonce);
+    const target = '0'.repeat(difficulty);
+
+    while (!hash.startsWith(target)) {
+        nonce++;
+        hash = generateHash(rootHash + previousHash + nonce);
+    }
+
+    return { nonce, hash };
 }

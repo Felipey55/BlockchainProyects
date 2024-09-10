@@ -14,12 +14,12 @@ function generateHash(data) {
     return shaObj.getHash("HEX");
 }
 
-// Función para agregar una nueva transacción al archivo JSON
+// Función para agregar múltiples transacciones al archivo JSON
 /**
- * Agrega una nueva transacción al archivo JSON y actualiza el archivo.
- * @param {number} transactionData - Los datos de la nueva transacción.
+ * Agrega múltiples transacciones al archivo JSON y actualiza el archivo.
+ * @param {Array<number>} transactionsData - Un array de transacciones.
  */
-function addTransaction(transactionData) {
+function addTransaction(transactionsData) {
     const filePath = '../BlockChain/transactions.json';
 
     // Leer el archivo JSON existente
@@ -32,24 +32,24 @@ function addTransaction(transactionData) {
         // Parsear el contenido del archivo JSON
         let jsonData = JSON.parse(fileData);
 
-        // Generar el hash de la nueva transacción
-        const newHash = generateHash(transactionData.toString());
-
-        // Agregar la nueva transacción al array de transacciones
-        jsonData.transactions.push({ data: transactionData, hash: newHash });
+        // Generar los hashes de las nuevas transacciones y agregarlas al array
+        transactionsData.forEach(transactionData => {
+            const newHash = generateHash(transactionData.toString());
+            jsonData.transactions.push({ data: transactionData, hash: newHash });
+        });
 
         // Escribir el archivo JSON actualizado
         fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
             if (err) {
                 console.error('Error al escribir el archivo:', err);
             } else {
-                console.log('Nueva transacción agregada con éxito:', transactionData);
+                console.log('Nuevas transacciones agregadas con éxito:', transactionsData);
             }
         });
     });
 }
 
-// Ejemplo de uso: Agregar una nueva transacción con el valor 50
-addTransaction(70);
+// Ejemplo de uso: Agregar múltiples transacciones
+addTransaction([70, 20, 35, 90]);
 
 module.exports = { addTransaction };
