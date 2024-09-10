@@ -52,4 +52,5 @@ function addTransaction(transactionsData) {
 // Ejemplo de uso: Agregar múltiples transacciones
 addTransaction([70, 20, 35, 90]);
 
+// Exportar la función para poder usarla en otros módulos
 module.exports = { addTransaction };
