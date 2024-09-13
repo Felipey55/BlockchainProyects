@@ -20,10 +20,10 @@ function generateHash(data) {
 // Función para agregar múltiples transacciones al archivo JSON
 /**
  * Agrega múltiples transacciones al archivo JSON y actualiza el archivo.
- * @param {Array<number>} transactionsData - Un array que contiene los datos de las transacciones.
+ * @param {Array<Object>} transactionsData - Un array de objetos que contienen las transacciones con las claves 'from', 'to', 'amount'.
  * 
- * Esta función toma un array de números que representan transacciones y las agrega a un archivo JSON. 
- * Cada transacción es hasheada usando SHA-256 antes de ser almacenada en el archivo. 
+ * Esta función toma un array de objetos que representan transacciones y las agrega a un archivo JSON. 
+ * Cada transacción incluye los campos 'from', 'to' y 'amount', y es hasheada usando SHA-256 antes de ser almacenada en el archivo.
  * La función lee el archivo, actualiza el contenido con las nuevas transacciones y luego guarda el archivo actualizado.
  */
 function addTransaction(transactionsData) {
@@ -41,8 +41,22 @@ function addTransaction(transactionsData) {
 
         // Generar los hashes de las nuevas transacciones y agregarlas al array
         transactionsData.forEach(transactionData => {
-            const newHash = generateHash(transactionData.toString());  // Generar un hash para cada transacción.
-            jsonData.transactions.push({ data: transactionData, hash: newHash });  // Agregar la transacción y su hash al array de transacciones.
+            // Generar una cadena JSON ordenada y convertirla a texto para el hash
+            const transactionString = JSON.stringify({
+                from: transactionData.from,
+                to: transactionData.to,
+                amount: transactionData.amount
+            });
+            
+            const newHash = generateHash(transactionString);  // Generar un hash para cada transacción.
+            
+            // Agregar la transacción completa con 'from', 'to', 'amount', y el hash generado
+            jsonData.transactions.push({
+                from: transactionData.from,
+                to: transactionData.to,
+                amount: transactionData.amount,
+                hash: newHash
+            });
         });
 
         // Escribir el archivo JSON actualizado
@@ -58,10 +72,14 @@ function addTransaction(transactionsData) {
 
 // Ejemplo de uso: Agregar múltiples transacciones
 /**
- * Ejemplo que demuestra cómo agregar múltiples transacciones.
+ * Ejemplo que demuestra cómo agregar múltiples transacciones con los campos 'from', 'to', y 'amount'.
  * Este bloque de código llama a la función addTransaction, proporcionando un array de transacciones.
  */
-addTransaction([70, 20, 35, 90]);  // Se agregan cuatro transacciones con los valores 70, 20, 35 y 90 al archivo JSON.
+addTransaction([
+    { from: 'Irene', to: 'Jack', amount: 10 },
+    { from: 'Carlos', to: 'David', amount: 25 },
+    { from: 'Alice', to: 'Bob', amount: 50 }
+]);
 
 // Exportar la función para poder usarla en otros módulos
 /**
